@@ -15,8 +15,8 @@ object NoSettings extends SettingFilter {
 }
 
 object Keys {
-   val mksox = InputKey[Unit]("sox",
-                              "Compiles a list of sbt Settings for a target configuration into a browsable document")
+   val stitch = InputKey[Unit]("stitch",
+                              "Compiles a list of sbt Settings and stitches them together into a browsable document")
    val soxDirectory = SettingKey[java.io.File]("sox-directory","Directory where sox docs will be written to")
    val preview  = TaskKey[Unit]("preview", "Generates a sox doc and launches in a browser")
    val filter = SettingKey[SettingFilter]("filter", "Filters which Settings get included")
@@ -42,7 +42,7 @@ object Plugin extends sbt.Plugin {
   def options: Seq[Setting[_]] = inConfig(Sox)(Seq(
     soxDirectory <<= (crossTarget, configuration) { (outDir, conf) => outDir / (Defaults.prefix(conf.name) + "sox") },
     filter := AllSettings,
-    mksox <<= InputTask(_ => (Space ~> ID).?) {
+    stitch <<= InputTask(_ => (Space ~> ID).?) {
       (scope: TaskKey[Option[String]]) =>
         (scope, state, configuration, soxDirectory, filter, streams) map { (scope, state, config, sd, sf, out) =>
 

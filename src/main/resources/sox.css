@@ -1,0 +1,75 @@
+* { margin:0; padding:0;  }
+
+body {
+  font-family:helvetica;
+  font-family: 'Copse', serif;
+  font-size:18px;
+}
+
+h1 {
+  border-left:10px solid #eee;
+  padding-left:.25em;
+}
+
+#explain {
+  margin:1em 0;
+}
+
+li {
+  margin:1px 0 1px 0;
+}
+
+li .content {
+  padding-left:1em;
+  margin:.5em 0;
+}
+
+input[type='text'] {
+  font-size:18px;
+  padding:.25em;
+}
+
+a:link, a:visited {
+  text-decoration:none;
+  color:#6DC9FF;color:#3D3D3D;
+}
+
+#settings { style-style:none; }
+
+.doc {
+  border-left:10px solid #eee;
+  margin:.25em 0;
+  padding:.25em .5em;
+}
+
+li:hover h1 {
+  border-left:10px solid #ccc;
+}
+
+li pre {
+  font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+  text-shadow:0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+/* fancy */
+
+html[data-useragent*="WebKit"] {
+  overflow: auto;
+}
+html[data-useragent*="WebKit"] body {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  bottom: 5px;
+  right: 10px;
+  padding: 0 10px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+
+::-webkit-scrollbar{background:#eee;width:2px}
+::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:start:increment{display:none}
+::-webkit-scrollbar-track{border:1px solid rgba(255,255,255,0.3)}
+::-webkit-scrollbar-track-piece{background:transparent}
+::-webkit-scrollbar-thumb:vertical{height:30px;-webkit-transition:background-color 300ms ease-out;-moz-transition:background-color 300ms ease-out;background:rgba(199,199,199,0.8);}
+::-webkit-scrollbar-thumb:vertical:window-inactive{background:rgba(199,199,199,0.2)}

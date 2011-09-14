@@ -32,7 +32,7 @@ object Keys {
                               "Compiles a list of sbt Settings and stitches them together into a browsable document")
    val drawer = SettingKey[java.io.File]("drawer","Directory where sox docs will be written to")
    val filter = SettingKey[SettingFilter]("filter",
-                                          "Filters which Settings get included. Defaults to every setting exception those named `configuration`")
+                                          "Filters which Settings get included. Defaults to every setting except those named `configuration`")
 }
 
 case class SoxSetting(key: sbt.Project.ScopedKey[_],

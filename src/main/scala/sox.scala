@@ -88,7 +88,7 @@ object Plugin extends sbt.Plugin {
 		        }
          }
 
-         val to = new java.io.File(sd, "sox.html")
+         val to = new java.io.File(sd, "index.html")
          (defined.filter(sf), fscope) match {
            case (sx, None) =>
              IO.write(to, Template(sx))
@@ -100,7 +100,7 @@ object Plugin extends sbt.Plugin {
            IO.delete(f)
            IO.transfer(this.getClass().getResourceAsStream("/%s" format r), f)
          }
-         out.log.info("Wrote sox docs")
+         out.log.info("Wrote sox docs to %s" format to.getPath)
 
       }
     }

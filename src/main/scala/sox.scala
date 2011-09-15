@@ -89,6 +89,7 @@ object Plugin extends sbt.Plugin {
          }
 
          val to = new java.io.File(sd, "index.html")
+         IO.delete(to)
          (defined.filter(sf), fscope) match {
            case (sx, None) =>
              IO.write(to, Template(sx))

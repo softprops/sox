@@ -46,7 +46,7 @@ object Plugin extends sbt.Plugin {
   import sbt.Keys._
   import sox.Keys._
 
-  val Sox = config("sox") extend(Runtime)
+  val Sox = config("sox")
 
   import complete._
   import complete.DefaultParsers._

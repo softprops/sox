@@ -1,6 +1,9 @@
 package sox
 
-import sbt.{Project, Scope, ConfigKey}
+import sbt.{BuildReference, ThisBuild, BuildRef, Project, ProjectReference, Scope,
+            LocalRootProject, LocalProject, ProjectRef,
+            ThisProject, RootProject, Reference,
+            ConfigKey}
 
 object DefaultLayout {
   def apply(body: xml.NodeSeq, title: String ="sox", header: String = "sox") =
@@ -32,8 +35,29 @@ case class Suri(scope: Scope, key: String) {
   // sbt doesn't show this if config.name is "compile"
   private def configDisplay(config: ConfigKey): String = config.name + ":"
 
+  private def projectRefDisplay(ref: ProjectReference) =
+		ref match {
+			case ThisProject => "{<this>}<this>"
+			case LocalRootProject => "{<this>}<root>"
+			case LocalProject(id) => "{<this>}" + id
+			case RootProject(uri) => "{" + uri + " }<root>"
+			case ProjectRef(uri, id) => "{" + uri + "}" + id
+		}
+
+  private def refDisplay(ref: Reference): String =
+		ref match {
+			case pr: ProjectReference => projectRefDisplay(pr)
+			case br: BuildReference => buildRefDisplay(br)
+		}
+
+	def buildRefDisplay(ref: BuildReference) =
+		ref match {
+			case ThisBuild => "{<this>}"
+			case BuildRef(uri) => "{" + uri + "}"
+		}
+
   /* Project.display https://github.com/harrah/xsbt/blob/v0.10.1/main/Project.scala#L192-200 */
-  val projectPrefix = project.foldStrict(Project.display, "*", ".")
+  val projectPrefix = project.foldStrict(refDisplay, "*", ".")
 	val configPrefix = config.foldStrict(configDisplay, "*:", ".:")
 	val taskPostfix = task.foldStrict(x => ("for " + x.label) :: Nil, Nil, Nil)
 

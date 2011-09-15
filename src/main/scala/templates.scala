@@ -32,16 +32,27 @@ object DefaultLayout {
 case class Suri(scope: Scope, key: String) {
   import scope.{project, config, task, extra}
 
+   private val SbtBuildId  = """default-(\S{6})""".r
+
+  /* sbt generates project uris using the following
+    https://github.com/harrah/xsbt/blob/v0.10.1/main/Build.scala#L32
+    match this pattern and just use default instead
+  */
+  private def uniform(id: String) = id match {
+    case SbtBuildId(_) => "default"
+    case id => id
+  }
+
   // sbt doesn't show this if config.name is "compile"
   private def configDisplay(config: ConfigKey): String = config.name + ":"
 
   private def projectRefDisplay(ref: ProjectReference) =
 		ref match {
-			case ThisProject => "{<this>}<this>"
-			case LocalRootProject => "{<this>}<root>"
-			case LocalProject(id) => "{<this>}" + id
-			case RootProject(uri) => "{" + uri + " }<root>"
-			case ProjectRef(uri, id) => "{" + uri + "}" + id
+			case ThisProject => "self/self"//"{<this>}<this>"
+			case LocalRootProject => "self/root"//"{<this>}<root>"
+			case LocalProject(id) => "self/%s" format uniform(id) //"{<this>}" + id
+			case RootProject(uri) => "ref/root"//;"{" + uri + " }<root>"
+			case ProjectRef(uri, id) => "ref/%s" format uniform(id) //{" + uri + "}" + id
 		}
 
   private def refDisplay(ref: Reference): String =
@@ -52,8 +63,8 @@ case class Suri(scope: Scope, key: String) {
 
 	def buildRefDisplay(ref: BuildReference) =
 		ref match {
-			case ThisBuild => "{<this>}"
-			case BuildRef(uri) => "{" + uri + "}"
+			case ThisBuild => "self" //"{<this>}"
+			case BuildRef(uri) => "ref"// "{" + uri + "}"
 		}
 
   /* Project.display https://github.com/harrah/xsbt/blob/v0.10.1/main/Project.scala#L192-200 */
@@ -93,6 +104,9 @@ object Template {
     val keySetting = settings.map(s=>s.key->s)
     val groupedAndSortedByLabel = keySetting.groupBy(p=>label(p._1)).toSeq.sortBy(_._1)
     val renderedSettings = groupedAndSortedByLabel.map(p=>setting(p._2.head._1, p._2.map(_._2).distinct)) // distinct is used to not show multiple '*/*:<setting>'
-    DefaultLayout(xml.NodeSeq fromSeq renderedSettings.toSeq).toString
+    DefaultLayout(xml.NodeSeq fromSeq renderedSettings.toSeq match {
+      case nil if (nil.isEmpty) => <li>These sox were ill stitched. Try another configuration.</li>
+      case sx => sx
+    }).toString
   }
 }

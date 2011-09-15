@@ -80,15 +80,19 @@ object Template {
   private def label(k: Project.ScopedKey[_]) =
     "%s%s" format(Suri(k.scope, k.key.label).configPrefix, k.key.label)
 
-  private def setting(s: SoxSetting) =
+  private def setting(key: Project.ScopedKey[_], ss: Seq[SoxSetting]) =
     <li>
-      <h1><a href="#">{label(s.key)}</a></h1>
+      <h1><a href="#">{label(key)}</a></h1>
       <div class="content">
-        <div>{desc(s.key)}</div>
-        <div>Provided by <span>{scopeDisplay(s.providedBy, s.key)}</span></div>
+        <div>{desc(key)}</div>
+        { for (s <- ss) yield <div>Provided by <span>{scopeDisplay(s.providedBy, s.key)}</span></div> }
       </div>
     </li>
 
-  def apply(settings: Seq[SoxSetting]) =
-    DefaultLayout(settings.map(setting)).toString
+  def apply(settings: Seq[SoxSetting]) = {
+    val keySetting = settings.map(s=>s.key->s)
+    val groupedAndSortedByLabel = keySetting.groupBy(p=>label(p._1)).toSeq.sortBy(_._1)
+    val renderedSettings = groupedAndSortedByLabel.map(p=>setting(p._2.head._1, p._2.map(_._2).distinct)) // distinct is used to not show multiple '*/*:<setting>'
+    DefaultLayout(xml.NodeSeq fromSeq renderedSettings.toSeq).toString
+  }
 }

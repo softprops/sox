@@ -48,11 +48,11 @@ case class Suri(scope: Scope, key: String) {
 
   private def projectRefDisplay(ref: ProjectReference) =
 		ref match {
-			case ThisProject => "self/self"//"{<this>}<this>"
-			case LocalRootProject => "self/root"//"{<this>}<root>"
-			case LocalProject(id) => "self/%s" format uniform(id) //"{<this>}" + id
-			case RootProject(uri) => "ref/root"//;"{" + uri + " }<root>"
-			case ProjectRef(uri, id) => "ref/%s" format uniform(id) //{" + uri + "}" + id
+			case ThisProject => "self/self"
+			case LocalRootProject => "self/root"
+			case LocalProject(id) => "self/%s" format uniform(id)
+			case RootProject(uri) => "ref/root"
+			case ProjectRef(uri, id) => "ref/%s" format uniform(id)
 		}
 
   private def refDisplay(ref: Reference): String =
@@ -63,8 +63,8 @@ case class Suri(scope: Scope, key: String) {
 
 	def buildRefDisplay(ref: BuildReference) =
 		ref match {
-			case ThisBuild => "self" //"{<this>}"
-			case BuildRef(uri) => "ref"// "{" + uri + "}"
+			case ThisBuild => "self"
+			case BuildRef(uri) => "ref"
 		}
 
   /* Project.display https://github.com/harrah/xsbt/blob/v0.10.1/main/Project.scala#L192-200 */
@@ -95,8 +95,8 @@ object Template {
     <li>
       <h1><a href="#">{label(key)}</a></h1>
       <div class="content">
-        <div>{desc(key)}</div>
-        { for (s <- ss) yield <div>Provided by <span>{scopeDisplay(s.providedBy, s.key)}</span></div> }
+        <div class="desc">{desc(key)}</div>
+        { for (s <- ss) yield <div class="provided">Provided by <span>{scopeDisplay(s.providedBy, s.key)}</span></div> }
       </div>
     </li>
 

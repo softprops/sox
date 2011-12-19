@@ -27,6 +27,11 @@ object IgnoreConfiguration extends SettingFilter {
     !Name.equalsIgnoreCase(s.key.key.label)
 }
 
+case class PrefixedWith(pref: String) extends SettingFilter {
+  def apply(s: SoxSetting) =
+    s.key.key.label.startsWith(pref)
+}
+
 case class SoxSetting(key: sbt.Project.ScopedKey[_],
                       providedBy: Scope,
                       deps: Iterable[sbt.Project.ScopedKey[_]],

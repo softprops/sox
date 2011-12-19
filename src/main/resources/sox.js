@@ -5,12 +5,16 @@
       $(this).parent().siblings("div.content").toggle();
     });
     $(document).bind('keyup', function(e) {
-        if(e.which === 83/*s*/) {
+        switch(e.which) {
+        case 83 /*3*/:
             if(e.shiftKey) {
                 $('div.content').show();
             } else {
                 $('div.content').hide();
             }
+            break;
+        case 70/*f*/:
+            $("#find").slideToggle('fast');
         }
     });
   });

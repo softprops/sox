@@ -55,6 +55,23 @@ li pre {
   margin:.5em 0;
 }
 
+#find {
+  background:#333;
+  padding:.5em;
+  margin-bottom:.5em;
+  display:none;
+}
+
+input[type="text"] {
+  border:1px solid #eee;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  -moz-box-shadow:inset 0px 2px 4px #c1bbc9;
+  -webkit-box-shadow:inset 0px 2px 4px #c1bbc9;
+  box-shadow:inset 0px 2px 4px #c1bbc9;
+}
+
 /* fancy */
 
 html[data-useragent*="WebKit"] {

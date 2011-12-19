@@ -27,16 +27,6 @@ object IgnoreConfiguration extends SettingFilter {
     !Name.equalsIgnoreCase(s.key.key.label)
 }
 
-object Keys {
-   val stitch = InputKey[Unit](key("stitch"),
-                              "Compiles a list of sbt Settings and stitches them together into a browsable document")
-   val drawer = SettingKey[java.io.File](key("drawer"),"Directory where sox docs will be written to")
-   val filter = SettingKey[SettingFilter](key("filter"),
-                                          "Filters which Settings get included. Defaults to every setting except those named `configuration`")
-
-  private def key(name: String) = "sox-%s" format name
-}
-
 case class SoxSetting(key: sbt.Project.ScopedKey[_],
                       providedBy: Scope,
                       deps: Iterable[sbt.Project.ScopedKey[_]],
@@ -46,11 +36,20 @@ case class SoxSetting(key: sbt.Project.ScopedKey[_],
 
 object Plugin extends sbt.Plugin {
   import sbt.Keys._
-  import sox.Keys._
 
   import complete._
   import complete.DefaultParsers._
   import Project.ScopedKey
+
+  object SoxKeys {
+    val stitch = InputKey[Unit](key("stitch"),
+                              "Compiles a list of sbt Settings and stitches them together into a browsable document")
+    val drawer = SettingKey[java.io.File](key("drawer"),"Directory where sox docs will be written to")
+    val filter = SettingKey[SettingFilter](key("filter"),
+                                          "Filters which Settings get included. Defaults to every setting except those named `configuration`")
+    private def key(name: String) = "sox-%s" format name
+  }
+  import SoxKeys._
 
   def soxSettings: Seq[Setting[_]] = soxSettingsIn(Compile) ++ soxSettingsIn(Test)
 

@@ -101,12 +101,12 @@ object Template {
     </li>
 
   def apply(settings: Seq[SoxSetting]) = {
-    println("starting")
+    println("Preprosing keys")
     val s = System.currentTimeMillis
     val keySetting = settings.map(s=>s.key->s)
     val groupedAndSortedByLabel = keySetting.groupBy(p=>label(p._1)).toSeq.sortBy(_._1)
     val renderedSettings = groupedAndSortedByLabel.map(p=>setting(p._2.head._1, p._2.map(_._2).distinct)) // distinct is used to not show multiple '*/*:<setting>'
-    println("ended %s" format(System.currentTimeMillis - s))
+    println("Preprosed keys in %s ms" format(System.currentTimeMillis - s))
     DefaultLayout(xml.NodeSeq fromSeq renderedSettings.toSeq match {
       case nil if (nil.isEmpty) => <li>These sox were ill stitched. Try another configuration.</li>
       case sx => sx

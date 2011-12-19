@@ -69,7 +69,7 @@ object Plugin extends sbt.Plugin {
           val sessionSettings = extracted.session.original
           import extracted._
 
-          println("start extracting")
+          out.log.info("Start extracting")
           val es = System.currentTimeMillis
           val defined = sessionSettings sortBy(_.key.key.label) flatMap {  s =>
             val key = s.key
@@ -101,28 +101,28 @@ object Plugin extends sbt.Plugin {
 			        case None => None
 		        }
          }
-         println("done extracting %s" format(System.currentTimeMillis - es))
+         out.log.info("Done extracting in %s ms" format(System.currentTimeMillis - es))
 
          val to = new java.io.File(sd, "index.html")
          IO.delete(to)
          (defined.filter(sf), fscope) match {
            case (sx, None) =>
-             println("writing template")
+             println("Writing template")
              val s = System.currentTimeMillis
              IO.write(to, Template(sx))
-             println("done writing template %s" format(
+             println("Done writing template in %s ms" format(
                System.currentTimeMillis - s))
            case (sx, Some(fc)) =>
              IO.write(to, Template(sx.filter(OnlyIn(fc))))
          }
-         println("writing resources")
+         out.log.info("Writing resources")
          val s = System.currentTimeMillis
          Seq("sox.css", "jquery.min.js", "sox.js") foreach { r =>
            val f = new java.io.File(sd, r)
            IO.delete(f)
            IO.transfer(this.getClass().getResourceAsStream("/%s" format r), f)
          }
-         println("wrote resources in %s" format(System.currentTimeMillis - s))
+         out.log.info("Wrote resources in %s ms" format(System.currentTimeMillis - s))
          out.log.info("Wrote sox docs to %s" format to.getPath)
 
       }

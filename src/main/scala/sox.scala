@@ -75,16 +75,17 @@ object Plugin extends sbt.Plugin {
 
           out.log.info("Start extracting")
           val es = System.currentTimeMillis
+          val cMap: Map[sbt.Project.ScopedKey[_],sbt.Project.Flattened] =
+            Project.flattenLocals(Project.compiled(
+              structure.settings, true/*actual*/)(
+              structure.delegates, structure.scopeLocal, Project.showFullKey/* display */))
+
           val defined = sessionSettings sortBy(_.key.key.label) flatMap {  s =>
             val key = s.key
             val scope = key.scope
             val scoped = ScopedKey(scope, key.key)
             structure.data.definingScope(scope, key.key) match {
 			        case Some(providedBy) =>
-                val cMap:  Map[sbt.Project.ScopedKey[_],sbt.Project.Flattened] =
-                  Project.flattenLocals(Project.compiled(
-                    structure.settings, true/*actual*/)(
-                    structure.delegates, structure.scopeLocal, Project.showFullKey/* display */))
 
 		            val related: Iterable[Project.ScopedKey[_]] =
                   cMap.keys.filter(k => k.key == key && k.scope != scope)
